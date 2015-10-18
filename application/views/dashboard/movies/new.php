@@ -22,7 +22,7 @@
                 		Add new movie
                 	</div>
                 	<div class="panel-body">
-                		<form role="form" id="addNewCatalog" action="<?php echo URL::base()?>dashboard/movies/new" method="post" enctype="multipart/form-data">
+                		<form role="form" id="addNewCatalog" action="<?php echo URL::base()?>dashboard/newMovie" method="post" enctype="multipart/form-data">
                                     <input type="hidden" name="category_id" value="1" />
                                     <div class="form-group col-lg-6">
 		                        <label>Movie ID</label>
@@ -41,7 +41,7 @@
 		                    </div>
                                     <div class="form-group col-lg-6">
 		                        <label>Catalog</label>
-		                        <select class="form-control" name="source_id" id="source_id">
+		                        <select class="form-control" name="catalog_id" id="catalog_id">
 			                    <option value="">Select catalog</option>
                                             <?php Helper_Catalogs::selectCatalogs (1);?>
                                         </select>
@@ -50,7 +50,7 @@
 		                    	<label>File input</label>
                                 <input type="file" name="image_name">
                                 <?php if ($uploaded_file): ?>
-                                <img src="<?php echo URL::site("/assets/images/catalogs/$uploaded_file") ?>" alt="Uploaded" />
+                                <img src="<?php echo URL::site("/assets/images/movies/$uploaded_file") ?>" alt="Uploaded" />
                                 <?php else: ?>
                                 <p><?php echo $error_message; ?></p>
                                 <?php endif;?>				  

@@ -70,20 +70,6 @@ class Model_User extends Model_Auth_User {
                         $compareFinal =  "=";
                         break;
                 }
-
-                if($EDI != "" AND $EDI != "all" )
-                {
-                    $users = $users->and_where($searchField,$compareFinal,$searchValueFinal);
-                    if($searchField != 'status')
-                    {
-                        $users = $users->and_where('status','<>','refused');
-                    }
-                }
-                else
-                {
-                    $users = $users->where($searchField,$compareFinal,$searchValueFinal);
-                }
-
             }
 
         $users = $users->find_all();
@@ -92,6 +78,8 @@ class Model_User extends Model_Auth_User {
         foreach($users as $key=>$val)
         {
             $final[$val->id] = $val->as_array();
+            $final[$val->id]['is_admin'] = 'YES';
+            $final[$val->id]['actions'] = '<a href="'.URL::base().'dashboard/editUser/'.$val->id.'" class="btn btn-primary btn-circle EditUser" type="button"><i class="fa fa-edit"></i></a>&nbsp;<button data-id="'.$val->id.'" class="btn btn-danger btn-circle DeleteUser" type="button"><i class="fa fa-remove"></i></button>';
             $i++;
         }
 

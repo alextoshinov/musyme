@@ -20,7 +20,7 @@
             <div class="col-lg-12">
                 <div class="panel panel-default">
                     <div class="panel-heading">
-                        List Songs <a href="<?php echo URL::base()?>dashboard/newUser" class="btn btn-success btn-xs pull-right" type="button">Add new</a>
+                        List users <a href="<?php echo URL::base()?>dashboard/newUser" class="btn btn-success btn-xs pull-right" type="button">Add new</a>
                     </div>
                     <!-- /.panel-heading -->
                     <div class="panel-body">
