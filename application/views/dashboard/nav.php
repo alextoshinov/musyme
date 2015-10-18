@@ -65,10 +65,10 @@
                             <a href="#"><i class="fa fa-users fa-fw"></i> User managements<span class="fa arrow"></span></a>
                             <ul class="nav nav-second-level">
                                 <li>
-                                    <a href="dashboard/users">View users</a>
+                                    <a href="<?php echo URL::base()?>dashboard/users">View users</a>
                                 </li>
                                 <li>
-                                    <a href="buttons.html">Add user</a>
+                                    <a href="<?php echo URL::base()?>dashboard/addUser">Add user</a>
                                 </li>                                
                             </ul>
                             <!-- /.nav-second-level -->

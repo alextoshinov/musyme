@@ -167,7 +167,6 @@ $(document).ready(function() {
 //        },
         "columns": [
                 { "data": "id" },
-                { "data": "url" },
                 { "data": "email" },
                 { "data": "username" },
                 { "data": "is_admin" },
@@ -220,6 +219,66 @@ $(document).ready(function() {
             category_id: "Please select category"
         }
     });
-    
+    //Movies actions
+    $("#editMovieForm").validate({
+        rules: {
+            name: { required: true },
+            category_id: { required: true },
+            image_name: { required: false }
+        },
+        messages: {
+            name: "Please specify your name",
+            category_id: "Please select category"
+        }
+    });
+    //
+    $("body").on("click", ".Deletemovies", function () {
+        var link_id = $(this).attr('data-id');
+        alert("Are you sure to delete this movie?");
+        $.ajax({
+            url: Base_URL + "dashboard/deleteMovie/" + link_id,
+            method: "GET",
+            success: function(data) {
+                if(data === 'success') {
+                    alert("You are deleted movie successly!");                  
+                }
+            },
+            error: function(data) {
+                
+            }
+        });
+        return false;
+    });
+    //Songs actions
+    $("#editSongsForm").validate({
+        rules: {
+            name: { required: true },
+            category_id: { required: true },
+            image_name: { required: false }
+        },
+        messages: {
+            name: "Please specify your name",
+            category_id: "Please select category"
+        }
+    });
+    //
+    $("body").on("click", ".Deletesongs", function () {
+        var link_id = $(this).attr('data-id');
+        alert("Are you sure to delete this song?");
+        $.ajax({
+            url: Base_URL + "dashboard/deleteSong/" + link_id,
+            method: "GET",
+            success: function(data) {
+                if(data === 'success') {
+                    alert("You are deleted song successly!");                  
+                }
+            },
+            error: function(data) {
+                
+            }
+        });
+        return false;
+    });
+    //
     
 });

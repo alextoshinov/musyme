@@ -104,7 +104,7 @@ class Model_Links extends ORM
             {
                $final[$key]['date_added'] = date('d.m.Y',$val['date_added']); 
             }
-            $final[$key]['actions'] = '<a href="'.URL::base().'dashboard/edit'.$categoryName.'/'.$val['catalog_id'].'" class="btn btn-primary btn-circle Edit'.$categoryName.'" type="button"><i class="fa fa-edit"></i></a>&nbsp;<button data-id="'.$val['catalog_id'].'" class="btn btn-danger btn-circle Delete'.$categoryName.'" type="button"><i class="fa fa-remove"></i></button>';
+            $final[$key]['actions'] = '<a href="'.URL::base().'dashboard/edit'.$categoryName.'/'.$val['link_id'].'" class="btn btn-primary btn-circle Edit'.$categoryName.'" type="button"><i class="fa fa-edit"></i></a>&nbsp;<button data-id="'.$val['link_id'].'" class="btn btn-danger btn-circle Delete'.$categoryName.'" type="button"><i class="fa fa-remove"></i></button>';
         }
         return $final;
     }
@@ -122,6 +122,39 @@ class Model_Links extends ORM
         }
     }
     //
+    public static function getLinkById($link_id)
+    {
+        $links = DB::select()
+                ->from('links')
+                ->where('link_id', '=', $link_id)                
+                ->execute()
+                ;
+        
+        $final = array();
+        //
+        foreach($links as $link)
+        {
+            $final[] = $link;
+        }
+        return $final;
+    }
+    //
+    public static function editLink($varsArray, $link_id)
+    {
+        $query = DB::update('links')->set($varsArray)->where('link_id','=',$link_id);
+        $query->execute();
+    }
+    /**
+     * <Delete Link>
+     * @author Alex Toshinov <alex.toshinov@bgomedia.net>
+     * @param Integer $link_id
+     * @return Boolean result
+ */
+    public static function deleteLink($link_id)
+    {
+        $link = $query = DB::delete('links')->where('link_id', '=', $link_id )->execute();
+        return $link;
+    }
     
 }
 

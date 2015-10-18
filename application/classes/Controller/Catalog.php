@@ -160,7 +160,10 @@ class Controller_Catalog extends Controller_Template_Admin
         }
  
         $directory = DOCROOT.'assets/images/catalogs';
- 
+        if(!is_dir($directory))
+        {
+            mkdir($directory, 0777);
+        }
         if ($file = Upload::save($image, $image['name'], $directory))
         {
 //            $filename = strtolower(Text::random('alnum', 20)).'.jpg';
