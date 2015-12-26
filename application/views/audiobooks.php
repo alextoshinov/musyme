@@ -1,3 +1,15 @@
+<div style="margin-bottom: 30px;">
+	<div style="width:35%;text-align:right;display:inline-block;">
+        <div class="store-colon" style="margin-top: 30px;"><img src="<?php echo URL::base(); ?>assets/img/free-download.png" width="268" height="135"></div>
+	</div>
+	<div style="width:30%;text-align:center;display:inline-block;">
+		<div class="store-colon" style="margin-top: 30px;"><a href="https://appsto.re/bg/tuWS6.i"><img class="apple" src="<?php echo URL::base(); ?>assets/img/app-store.png" width="172" height="60"></a></div>
+		<div class="store-colon" style="margin-top: 15px;"><a href="https://play.google.com/store/apps/details?id=me.musy.android"><img alt="Get it on Google Play" src="https://developer.android.com/images/brand/en_generic_rgb_wo_60.png"></a></div>
+		</div>
+		<div style="width:30%;text-align:left;display:inline-block;">
+            <div class="store-colon" style="margin-top: 30px;"><img src="<?php echo URL::base(); ?>assets/img/3749305C-1C3E-4EC7-916E-A09.png" width="100" height="100"></div>
+        </div>
+    </div>
 <section>
     <ul class="gallery">
         <li><div class="frame port num"><a href="lm/book.php" class="popup"><img class="cover-image" src="<?php echo URL::base(); ?>assets/images/covers/lm.jpg" alt="Little"></a><p><br><span class="order">1</span></p></div></li>

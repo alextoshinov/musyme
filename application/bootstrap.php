@@ -128,11 +128,12 @@ Kohana::modules(array(
 	// 'codebench'  => MODPATH.'codebench',  // Benchmarking tool
 	 'database'   => MODPATH.'database',   // Database access
 	 'image'      => MODPATH.'image',      // Image manipulation
-	// 'minion'     => MODPATH.'minion',     // CLI Tasks
+	 'minion'     => MODPATH.'minion',     // CLI Tasks
 	 'orm'        => MODPATH.'orm',        // Object Relationship Mapping
          'paginate'        => MODPATH.'paginate',  // Paginate
          'datatables'        => MODPATH.'datatables',  // datatables
          'dataTable'        => MODPATH.'dataTable',  // dataTable
+         'restful'  => MODPATH.'restful',
 	// 'unittest'   => MODPATH.'unittest',   // Unit testing
 	// 'userguide'  => MODPATH.'userguide',  // User guide and API documentation
 	));

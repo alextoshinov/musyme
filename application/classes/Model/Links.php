@@ -55,7 +55,18 @@ class Model_Links extends ORM
     //
     public static function getAllLinks($category_id,$source_id=false, $catalog_id=false,$language_id=false)
     {
-        $links = DB::select()
+        $links = DB::select(
+                    'links.link_id',
+                    'links.url',
+                    'links.source_id',
+                    'links.title',
+                    'links.catalog_id',
+                    'links.image_name',
+                    'links.language_id',
+                    'links.agegroup_id',
+                    'links.date_added',
+                    'links.is_public'
+                )
                 ->from('links')
                 ->join('catalogs', 'left')
                 ->on('links.catalog_id', '=', 'catalogs.catalog_id')
@@ -86,19 +97,19 @@ class Model_Links extends ORM
             $links = $links->or_where_close();
         }
                 
-        $links =$links->order_by('links.date_added');
+        $links =$links->order_by('links.date_added','DESC');
         $links =$links->execute();
-                
+            
         $categoryName = Model_Categories::getNameById($category_id);
         $final = array();
 
         foreach($links as $key => $val)
         {
             $final[$key] = $val;
-            $source = Model_Sources::getProvider($val['source_id']);
+            $source = Model_Sources::getProvider($val['source_id']);   
             $final[$key]['source_id'] = $source['name'];
             $catalog = Model_Catalogs::getCatalogById($val['catalog_id']);
-            $final[$key]['catalog_id'] = $catalog[0]['name'];
+            $final[$key]['catalog'] = $catalog[0]['name'];
             $final[$key]['language_id'] = Model_Languages::getLangIconById($val['language_id']);
             if(!empty($val['date_added']))
             {
@@ -155,6 +166,62 @@ class Model_Links extends ORM
         $link = $query = DB::delete('links')->where('link_id', '=', $link_id )->execute();
         return $link;
     }
+    //
+    public static function checkIfExpired($provider, $video_id)
+    {
+        if($provider === "youtube" OR $provider === "vimeo")
+        {
+            switch($provider)
+            {
+                case 'youtube':
+                    $URL = "http://www.youtube.com/oembed?url=http://www.youtube.com/watch?v=".$video_id."&format=json";
+                    break;
+                case 'vimeo':
+                    $URL = "https://vimeo.com/api/oembed.json?url=https%3A//vimeo.com/".$video_id;
+                    break;
+            }
+            //
+            $headers = get_headers($URL);
+            if (substr($headers[0], 9, 3) !== "404") {
+                return true;
+            } else {
+                return false;
+            }
+            //
+        } else if($provider === "vbox")
+        {
+            $URL = "http://vbox7.com/etc/ext.do?key=".$video_id;
+            $vbox7 = file_get_contents("http://vbox7.com/etc/ext.do?key=".$video_id);
+            $pos = strpos($vbox7, "errorInfo");
+            if ($pos === false) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+        //        
+    }
+    //
+    public static function updatePublish()
+    {
+        $links = DB::select()
+                ->from('links')
+                ->execute()
+                ;        
+        //
+        foreach($links as $val)
+        {
+            $s = Model_Sources::getProvider($val['source_id']);
+             if(self::checkIfExpired($s['name'], $val['url']))
+             {
+                self::editLink(array('is_public'=>1), $val['link_id']);
+             } else {
+                self::editLink(array('is_public'=>0), $val['link_id']);
+             }
+        }
+        //
+    }
+    //
     
 }
 

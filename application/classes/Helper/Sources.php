@@ -11,11 +11,11 @@ class Helper_Sources
             if($source_id == $source['source_id'])
             {
                 ?>
-            <option value="<?php echo $source['source_id'];?>" selected><?php echo $source['name'];?></option>
+            <option data-name="<?php echo $source['name'];?>" value="<?php echo $source['source_id'];?>" selected><?php echo $source['name'];?></option>
             <?php
             } else {
                 ?>
-            <option value="<?php echo $source['source_id'];?>"><?php echo $source['name'];?></option>
+            <option data-name="<?php echo $source['name'];?>" value="<?php echo $source['source_id'];?>"><?php echo $source['name'];?></option>
         <?php 
             }
                

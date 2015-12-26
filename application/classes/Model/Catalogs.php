@@ -72,8 +72,16 @@ class Model_Catalogs extends ORM
         $catalogs = ORM::factory('Catalogs');
         $catalogs->where('category_id', '=', $category_id);
         $catalogs->and_where('language_id', '=', $language_id);
+        //International + English
+        if($language_id == 8) 
+        {
+            $catalogs->or_where_open();
+            $catalogs->or_where('language_id', '=', 1);
+            $catalogs->or_where_close();
+        }
         //
         $catalogsVar = $catalogs->find_all();
+
         $final = array();
 
         foreach($catalogsVar as $val)
@@ -83,14 +91,15 @@ class Model_Catalogs extends ORM
         return $final;
     }
     //
-    public static function getAllSelect ($category_id)
+    public static function getAllSelect ($category_id, $language_id)
     {
         $catalogs = DB::select()
                 ->from('catalogs')
                 ->where('category_id', '=', $category_id)
+                ->and_where('language_id', '=', $language_id)
                 ->execute()
                 ;
-        
+        $final = array();
         foreach($catalogs as $c)
         {
             $final[] = $c;

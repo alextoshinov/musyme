@@ -13,6 +13,16 @@
         <div class="row">
             <div class="col-lg-12">
                 <h1 class="page-header">Songs</h1>
+                <div class="alert alert-warning alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <strong>Warning!</strong> Only for Youtube and Vimeo use: <br />
+                    <ol>
+                        <li>Enter Provider ID</li>
+                        <li>Select provider</li>
+                        <li>Right click and Save Image As...</li>
+                        <li>Upload video image and fill form</li>
+                    </ol>
+                </div>
             </div>
         </div>
         <div class="row">
@@ -23,11 +33,12 @@
                 	</div>
                 	<div class="panel-body">
                             <?php if(isset($song) && !empty($song)){
-                                $song = $song[0];                            
+                                $song = $song[0]; 
+//                                echo '<pre>'; print_r($song);
                             ?>
                 		<form role="form" id="editSongsForm" action="<?php echo URL::base()?>dashboard/editsongs" method="post" enctype="multipart/form-data">
                                     <input type="hidden" name="link_id" value="<?php echo $song['link_id'];?>" />
-                                    <input type="hidden" name="category_id" value="1" />
+                                    <input type="hidden" name="category_id" value="2" />
                                     <div class="form-group col-lg-6">
 		                        <label>Song ID</label>
                                         <input placeholder="Song ID" class="form-control" name="url" id="url" value="<?php echo $song['url'];?>">
@@ -44,36 +55,38 @@
                                         </select>
 		                    </div>
                                     <div class="form-group col-lg-6">
-		                        <label>Catalog</label>
-		                        <select class="form-control" name="catalog_id" id="catalog_id">
-			                    <option value="">Select catalog</option>
-                                            <?php Helper_Catalogs::selectCatalogs (1,$song['catalog_id']);?>
-                                        </select>
-		                    </div>
-		                    <div class="form-group col-lg-6 ">
-		                    	<label>File input</label>
-                                <input type="file" name="image_name">
-                                <?php if ($uploaded_file): ?>
-                                <img src="<?php echo URL::site("/assets/images/songs/$uploaded_file") ?>" alt="Uploaded" />
-                                <?php else: ?>
-                                <p><?php echo $error_message; ?></p>
-                                <?php endif;?>				  
-		                    </div>
-
-		                    <div class="form-group col-lg-6">
 		                        <label>Song language</label>
-		                        <select class="form-control" name="language_id">
+		                        <select class="form-control" name="language_id"  id="language_id" data-category-id="2">
 			                        <option value="">Select language</option>
 			                        <?php echo Helper_Languages::selectLanguages ($song['language_id']);?>
 			                    </select>
 		                    </div>
+                                    
+                                    
+		                    <div class="form-group col-lg-6 ">
+		                    	<label>File input</label>
+                                <input type="file" name="image_name">
+                                <div id="video-tumb"></div>
+                                <?php if ($uploaded_file): ?>
+                                <img src="<?php echo URL::site("/assets/images/".$song['catalog_id']."/".$uploaded_file) ?>" alt="<?php echo $song['title'];?>" width="270" height="180"/>
+                                <?php else: ?>
+                                <p><?php echo $error_message; ?></p>
+                                <?php endif;?>				  
+		                    </div>
+                                    <div class="form-group col-lg-6">
+		                        <label>Catalog</label>
+		                        <select class="form-control" name="catalog_id" id="catalog_id">
+			                    <option value="">Select catalog</option>
+                                            <?php Helper_Catalogs::selectCatalogs (2,$song['language_id'], $song['catalog_id']);?>
+                                        </select>
+		                    </div>
+		                    
 		                    
 		                    <div class="form-group col-lg-3">
 		                        <label>Song age group</label>
 		                        <select class="form-control" name="agegroup_id" id="agegroup_id">
                                             <option value="">Select age group</option>
-                                            <option value="1" <?php if($song['agegroup_id'] == 1) { echo 'selected'; }?>>1-3</option>
-                                            <option value="2" <?php if($song['agegroup_id'] == 2) { echo 'selected'; }?>>3-7</option>
+                                            <?php echo Helper_Agegroup::selectAgegroup ($song['agegroup_id']);?>
                                         </select>
 		                    </div>
 		                    <div class="form-group col-lg-3">

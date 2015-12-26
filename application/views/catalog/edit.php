@@ -1,9 +1,11 @@
-
-
-
-
-
-
+<?php
+/**
+ * Created by PhpStorm.
+ * User: alex
+ * Date: 9/24/15
+ * Time: 7:45 PM
+ */
+?>
 
 <?php include Kohana::find_file('views', 'dashboard/nav'); ?>
 <!-- Page Content -->
@@ -24,7 +26,7 @@
                   </div>
                   <div class="panel-body">
                     <form role="form" id="editCatalogForm" action="<?php echo URL::base()?>catalog/update" method="post" enctype="multipart/form-data">
-                        <input type="hidden" name="catalog_id" value="<?php echo $c['catalog_id'];?>"
+                        <input type="hidden" name="catalog_id" value="<?php echo $c['catalog_id'];?>" />
                     <div class="form-group col-lg-6">
                             <label>Catalog name</label>
                             <input placeholder="Name" 

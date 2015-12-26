@@ -2,9 +2,10 @@
 //
 class Helper_Catalogs
 {
-    public static function selectCatalogs ($category_id, $catalog_id=null)
+    public static function selectCatalogs ($category_id,  $language_id, $catalog_id=null)
     {
-        $catalogs = Model_Catalogs::getAllSelect ($category_id);
+
+        $catalogs = Model_Catalogs::getAllSelect ($category_id, $language_id);
         //
         foreach($catalogs as $catalog)
         { 

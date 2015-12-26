@@ -20,7 +20,7 @@ class Model_Languages extends ORM
     {
         $languages = ORM::factory('Languages')
                 ->where('is_public', '=', $is_public)
-                ->and_where('abbr', '!=', '--')
+//                ->and_where('abbr', '!=', '--')
                 ->find_all()
                 ;
         //
@@ -44,7 +44,7 @@ class Model_Languages extends ORM
         $id = DB::select('language_id')
                 ->from('languages')
                 ->where('abbr', '=', $abbr)
-                ->and_where('abbr', '!=', '--')
+//                ->and_where('abbr', '!=', '--')
                 ->execute()
                 ->get('language_id')
                 ;
