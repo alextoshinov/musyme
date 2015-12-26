@@ -34,21 +34,26 @@ class Model_Sources extends ORM
 
    public static function getProvider($source_id)
     {
+        $final = array();
         $sources = DB::select('source_id','name', 'url')
                 ->from('sources')
                 ->where('source_id', '=', $source_id)
                 ->execute()
                 ;
-        
-        foreach($sources as $s)
+        if(isset($sources) && !empty($sources))
         {
-            $final = array(
-                'source_id'=>$s['source_id'],
-                'name'=>$s['name'],
-                'url'=>$s['url']
-            );
-        }
-        return $final;
+            foreach($sources as $s)
+            {
+                $final = array(
+                    'source_id'=>$s['source_id'],
+                    'name'=>$s['name'],
+                    'url'=>$s['url']
+                );
+            }
+            return $final;
+        } else {
+            return false;
+        }    
     }
     
 }

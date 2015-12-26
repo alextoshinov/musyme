@@ -38,8 +38,9 @@
                                         <th>Lang</th>
 <!--                                        <th>User</th>
                                         <th>Agegroup</th>
-                                        <th>Created at</th>-->
+                                        -->
                                         <th>is Public</th>
+                                        <th>Created at</th>
                                         <th>Actions Edit/Delete</th>
                                     </tr>
                                 </thead>
@@ -55,8 +56,9 @@
                                         <th>Lang</th>
 <!--                                        <th>User</th>
                                         <th>Agegroup</th>
-                                        <th>Created at</th>-->
+                                        -->
                                         <th>is Public</th>
+                                        <th>Created at</th>
                                         <th>Actions Edit/Delete</th>
                                     </tr>
                                 </tfoot>

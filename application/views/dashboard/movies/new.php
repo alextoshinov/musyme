@@ -13,6 +13,16 @@
         <div class="row">
             <div class="col-lg-12">
                 <h1 class="page-header">Movies</h1>
+                <div class="alert alert-warning alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <strong>Warning!</strong> Only for Youtube and Vimeo use: <br />
+                    <ol>
+                        <li>Enter Provider ID</li>
+                        <li>Select provider</li>
+                        <li>Right click and Save Image As...</li>
+                        <li>Upload video image and fill form</li>
+                    </ol>
+                </div>
             </div>
         </div>
         <div class="row">
@@ -25,8 +35,8 @@
                 		<form role="form" id="addNewCatalog" action="<?php echo URL::base()?>dashboard/newMovie" method="post" enctype="multipart/form-data">
                                     <input type="hidden" name="category_id" value="1" />
                                     <div class="form-group col-lg-6">
-		                        <label>Movie ID</label>
-		                        <input placeholder="Movie ID" class="form-control" name="url" id="url">
+		                        <label>Provider ID</label>
+		                        <input placeholder="Provider ID" class="form-control" name="url" id="url">
 		                    </div>
                                     <div class="form-group col-lg-6">
 		                        <label>Title</label>
@@ -40,29 +50,32 @@
                                         </select>
 		                    </div>
                                     <div class="form-group col-lg-6">
-		                        <label>Catalog</label>
-		                        <select class="form-control" name="catalog_id" id="catalog_id">
-			                    <option value="">Select catalog</option>
-                                            <?php Helper_Catalogs::selectCatalogs (1);?>
-                                        </select>
+		                        <label>Movie language</label>
+		                        <select class="form-control" name="language_id"  id="language_id" data-category-id="1">
+			                        <option value="">Select language</option>
+			                        <?php echo Helper_Languages::selectLanguages ();?>
+			                    </select>
 		                    </div>
+                                    
 		                    <div class="form-group col-lg-6 ">
-		                    	<label>File input</label>
+		                    	<label>Cover image</label>
                                 <input type="file" name="image_name">
+                                <div id="video-tumb"></div>
+                                    
                                 <?php if ($uploaded_file): ?>
                                 <img src="<?php echo URL::site("/assets/images/movies/$uploaded_file") ?>" alt="Uploaded" />
                                 <?php else: ?>
                                 <p><?php echo $error_message; ?></p>
                                 <?php endif;?>				  
 		                    </div>
-
-		                    <div class="form-group col-lg-6">
-		                        <label>Movie language</label>
-		                        <select class="form-control" name="language_id">
-			                        <option value="">Select language</option>
-			                        <?php echo Helper_Languages::selectLanguages ();?>
-			                    </select>
+                                    <div class="form-group col-lg-6">
+		                        <label>Catalog</label>
+		                        <select class="form-control" name="catalog_id" id="catalog_id">
+			                    <option value="">Select catalog</option>
+                                            
+                                        </select>
 		                    </div>
+		                    
 		                    
 		                    <div class="form-group col-lg-3">
 		                        <label>Movie age group</label>

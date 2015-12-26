@@ -52,6 +52,7 @@ class Controller_Template_Admin extends Controller_Template
 				'bower_components/datatables-plugins/integration/bootstrap/3/dataTables.bootstrap.css' => 'screen',
 				'bower_components/datatables-responsive/css/dataTables.responsive.css' => 'screen',
 				'bower_components/font-awesome/css/font-awesome.min.css' => 'screen',
+                                'bower_components/jquery.gritter/css/jquery.gritter.css' => 'screen',
 			//	'assets/css/dropzone.css' => 'screen',
                 'assets/css/musyme-admin.css' => 'screen',
                 'assets/css/timeline.css' => 'screen',
@@ -66,6 +67,7 @@ class Controller_Template_Admin extends Controller_Template
 				'bower_components/jquery-validation/dist/additional-methods.min.js',
 				'bower_components/datatables-plugins/integration/bootstrap/3/dataTables.bootstrap.min.js',
 				//'assets/js/dropzone.js',
+                                'bower_components/jquery.gritter/js/jquery.gritter.min.js',
 				'assets/js/musyme-admin.js',
 			);
 	

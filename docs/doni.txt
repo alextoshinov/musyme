@@ -1,0 +1,36 @@
+Admin
+
+Create movie
+http://1.a­w­d.biz/dashboard/newMovie
+1. Movie ID  да добавим (provider’s ID)  - Да
+2. File input да стане Cover image Admin - Да
+Create movie
+http://1.a­w­d.biz/dashboard/newMovie
+1. Movie ID  да добавим (provider’s ID) - Да
+2. File input да стане Cover image - Да
+под input­a за картинката да добавим (recommended size:540x360px ) - Да
+3. Movie language да се премести под Title и като се избере език, в Catalog да се 
+листват само каталози на съответния език, защото в момента мога да сложа 
+английско филмче в български каталог, което не е ок. - Да
+
+Movies list
+http://1.a­w­d.biz/dashboard/movies/edit/665
+1. Филмчетата в грида да са подредени по date modified/date created (най­горе да е 
+последното променяно/създадено) - Да
+2. В грида да се показва картинката на филмчето, а не на каталога - Да
+3. Тук трябва да се показва езика на филмчето, който трябва да е същия като езика 
+на каталога http://1.a­w­d.biz/dashboard/editmovies/665 the language is EN, but in the 
+grid is NL - Да
+4. При изтриване на филмче да се обновява грида автоматично. - Да
+
+Movies list
+1. Admin ­ всички права
+2. Editor
+a. да не може да създава/редактира/изтрива категории.
+b. да не може да изтрива каталози (само Unpublish)
+c. да не може да създава възрастови групи
+d. да не може да одобрява users
+
+Public
+Да добавим search
+

@@ -2,15 +2,16 @@
 
 class Controller_Dashboard extends Controller_Template_Admin {
 
-	public function before()
+	
+        public function before()
 	{
 		parent::before();
 		
 		if (!Auth::instance()->logged_in('admin'))
 		{
-			$this->redirect('account/login');
+                    $this->redirect('account/login');
 		}
-
+                
 		$this->template->loged = TRUE;
 	}
 	
@@ -73,6 +74,20 @@ class Controller_Dashboard extends Controller_Template_Admin {
 		print(json_encode($final));
 	}
         
+        public function action_getAgegroup()
+        {
+            $this->auto_render = FALSE;
+		$agegroup = Model_Agegroup::getAll();
+		$final['data'] = array();
+		//
+		foreach($agegroup as $val)
+		{
+                    $final['data'][] = $val;
+		}
+		//
+		print(json_encode($final));
+        }
+
         public function action_getUsers()
 	{
             $this->auto_render = FALSE;
@@ -103,10 +118,178 @@ class Controller_Dashboard extends Controller_Template_Admin {
         //
         public function action_newUser()
 	{
+//            echo '<pre>'; print_r($_POST); exit;
+            // form post handling
+		if (isset($_POST) && Valid::not_empty($_POST)) {
+			
+			// validate
+			$post = Validation::factory($_POST)
+			->rule('email', 'not_empty')
+			->rule('email', 'email')
+			->rule('email', 'email_domain')
+			->rule('username', 'not_empty')
+			->rule('username', Kohana::$config->load('musyme.account.create.username.format'))
+			->rule('username', 'min_length', array(':value', Kohana::$config->load('musyme.account.create.username.min_length')))
+			->rule('username', 'max_length', array(':value', Kohana::$config->load('musyme.account.create.username.max_length')))
+			->rule('password', 'not_empty')
+			->rule('password', 'min_length', array(':value', Kohana::$config->load('musyme.account.create.password.min_length')))
+			->rule('password', array($this, 'pwdneusr'), array(':validation', ':field', 'username'));
+					
+			if ($post->check()) {
+				// save
+				$model = ORM::factory('User');
+				$model->values(array(
+					'email'		=> $post['email'],
+					'username' 	=> HTML::entities(strip_tags($post['username'])),
+					'password'	=> $post['password'],
+				));
+				try {
+					$model->save();
+					
+					$model->add('roles', ORM::factory('Role')->where('name', '=', 'login')->find());
+					$model->add('roles', ORM::factory('Role')->where('name', '=', 'participant')->find());
+					$this->redirect('dashboard/users');
+					
+				}
+				catch (ORM_Validation_Exception $e) {
+					$errors = $e->errors('user');
+				}
+			} else {
+				$errors = $post->errors('user');
+			}
+		}
+		
+		// TODO i18n
+		$this->template->title = __('Create an account');
+		
+		// display
+		$this->template->content = View::factory('dashboard/users/new')
+		->bind('post', $post)
+		->bind('errors', $errors);
+
+        }
+        //
+        // check if username is available
+	// call by ajax
+	public function action_checkusername()
+	{
+		if ($this->request->is_ajax()) {
+			$this->auto_render = FALSE;
+
+			if(!ORM::factory('User')->unique_key_exists($_POST['username'])) {
+				echo json_encode(array('available' => 1));
+			} else {
+				echo json_encode(array('available' => 0));
+			}
+		}
+	}
+	
+	
+	// validation rule: password != username
+	static function pwdneusr($validation, $password, $username)
+	{
+		if ($validation[$password] === $validation[$username])
+		{
+			$validation->error($password, 'pwdneusr');
+		}
+	}
+	
+	
+	//validation rule: password exist
+	static function pwdexist($validation, $email)
+	{
+		if(!ORM::factory('user')->unique_key_exists($validation[$email])) {
+			$validation->error($email, 'emailexistnot');
+		}
+	}
+	
+	
+	// generate token
+	static function generate_token($length = 8)
+	{
+		// start with a blank password
+		$password = "";
+		// define possible characters (does not include l, number relatively likely)
+		$possible = "123456789abcdefghjkmnpqrstuvwxyz123456789";
+		// add random characters to $password until $length is reached
+		for ($i = 0; $i < $length; $i++) {
+			// pick a random character from the possible ones
+			$char = substr($possible, mt_rand(0, strlen($possible)-1), 1);
+			$password .= $char;
+		}
+		return $password;
+	}
+        //
+        public function action_editUser()
+	{            
             $this->template->show_logout = TRUE;
-            $this->template->title = 'New user'; 
-            $view = $this->template->content = View::factory('dashboard/users/new');
+            $this->template->title = 'Edit user'; 
+            $id = $this->request->param('id');
+            
+            $id = isset($_POST['id']) ? $_POST['id']:$id;
+            $user = Model_User::getUserById($id);
+            
+            $errors = array();
+            if($_POST)
+            {
+                if(isset($_POST['role']))
+                {
+                    unset($_POST['role']);
+                }
+                //
+                if($user['email'] == $_POST['email'])
+                {
+                    unset($_POST['email']);
+                } else if(Model_User::checkEmailExists($_POST['email']))
+                {
+                    $errors[] = 'E-mail address is taken!';
+                }
+                //
+                if($user['username'] == $_POST['username'])
+                {
+                    unset($_POST['username']);
+                }
+                else if(Model_User::checkUsernameExists($_POST['username']))
+                {
+                    $errors[] = 'Username is taken!';
+                }
+                //
+                if($_POST['password'] == '')
+                {
+                    unset($_POST['password']);
+                } else {
+                    $_POST['password'] = Auth::instance()->hash_password($_POST['password']);
+                }                
+                //
+                
+                if(empty($errors))
+                {
+                    Model_User::editUser($_POST, $_POST['id']);
+                    $this->redirect('dashboard/users');
+                } else {
+                    $user = Model_User::getUserById($_POST['id']);
+                }
+                
+            }
+            $view = $this->template->content = View::factory('dashboard/users/edit')
+                    ->set('errors',$errors)
+                    ->set('user', $user);
             $this->response->body($view);
+        }
+        //
+        
+        public function action_deleteUser()
+        {
+            $this->auto_render = FALSE;
+            $this->template->show_logout = TRUE;
+            $this->template->title = 'Delete user'; 
+            $id = $this->request->param('id');
+            $r = Model_User::deleteUser($id);
+            if($r) {
+                print 'success';
+            } else {
+                print 'error';
+            }
         }
         //
         public function action_newMovie()
@@ -122,17 +305,17 @@ class Controller_Dashboard extends Controller_Template_Admin {
             {
                 if (isset($_FILES['image_name']))
                 {
-                    $folderName = Model_Categories::getNameById($_POST['category_id']);
+                    $folderName = $_POST['catalog_id'];
                     $filename = $this->_save_image($_FILES['image_name'], $folderName);
                 }
                 //
                 $linkArr = array(
                             'url'=>$_POST['url'],
-                            'source_id'=>$_POST['source_id'],
+                            'source_id'=>$_POST['source_id'] != 0 ? $_POST['source_id']:1,
                             'title'=>$_POST['title'],
                             'catalog_id' => $_POST['catalog_id'],
                             'image_name'=>$_FILES['image_name']['name'],
-                            'language_id'=>$_POST['category_id'],
+                            'language_id'=>$_POST['language_id'],
                             'user_id'=>Auth::instance()->get_user()->id,
                             'agegroup_id'=>$_POST['agegroup_id'],
                             'date_added'=>time(),
@@ -145,7 +328,7 @@ class Controller_Dashboard extends Controller_Template_Admin {
             if ( ! $filename)
             {
                 $error_message = 'There was a problem while uploading the image.
-                    Make sure it is uploaded and must be JPG/PNG/GIF file.';
+                    Make sure it is uploaded and must be JPG/PNG/GIF file and recommended size:540x360px';
             }
             if($pk)
             {
@@ -170,7 +353,7 @@ class Controller_Dashboard extends Controller_Template_Admin {
             {
                 if (isset($_FILES['image_name']))
                 {
-                    $folderName = Model_Categories::getNameById($_POST['category_id']);
+                    $folderName = $_POST['catalog_id'];
                     $filename = $this->_save_image($_FILES['image_name'], $folderName);
                 }                
                 //
@@ -196,7 +379,7 @@ class Controller_Dashboard extends Controller_Template_Admin {
                 if ( ! $filename)
                 {
                     $error_message = 'There was a problem while uploading the image.
-                        Make sure it is uploaded and must be JPG/PNG/GIF file.';
+                        Make sure it is uploaded and must be JPG/PNG/GIF file and recommended size:540x360px';
                 }
  		if($_POST['link_id'])
  		{
@@ -221,6 +404,32 @@ class Controller_Dashboard extends Controller_Template_Admin {
             }
         }
         //
+        public function action_newAgegroup()
+        {
+            $this->template->show_logout = TRUE;
+            $this->template->title = 'New age group'; 
+            $view = $this->template->content = View::factory('dashboard/agegroup/new');
+            $error_message = NULL;
+            $pk = FALSE;
+            if ($this->request->method() == Request::POST)
+            {
+                $ageArr = array(
+                            'title'=>$_POST['title'],
+                            'description' => $_POST['description'],                            
+                            'is_public'=>$_POST['is_public']
+                            );
+                //
+                $pk = Model_Agegroup::addAgegroup($ageArr);
+            }
+            if($pk)
+            {
+                $this->redirect('dashboard/editagegroup/'.$pk);
+            }
+
+        $view->error_message = $error_message;
+        $this->response->body($view);
+        }
+        //
         public function action_newSong()
 	{
             $this->template->show_logout = TRUE;
@@ -234,13 +443,13 @@ class Controller_Dashboard extends Controller_Template_Admin {
             {
                 if (isset($_FILES['image_name']))
                 {
-                    $folderName = Model_Categories::getNameById($_POST['category_id']);
+                    $folderName = $_POST['catalog_id'];
                     $filename = $this->_save_image($_FILES['image_name'], $folderName);
                 }
                 //
                 $linkArr = array(
                             'url'=>$_POST['url'],
-                            'source_id'=>$_POST['source_id'],
+                            'source_id'=> $_POST['source_id'] != 0 ? $_POST['source_id']:1,
                             'title'=>$_POST['title'],
                             'catalog_id' => $_POST['catalog_id'],
                             'image_name'=>$_FILES['image_name']['name'],
@@ -261,7 +470,7 @@ class Controller_Dashboard extends Controller_Template_Admin {
             }
             if($pk)
             {
-                    $this->redirect('dashboard/songs/edit/'.$pk);
+                    $this->redirect('dashboard/editsongs/'.$pk);
             }
 
         $view->uploaded_file = $filename;
@@ -269,6 +478,34 @@ class Controller_Dashboard extends Controller_Template_Admin {
         $this->response->body($view);
             
 	}
+        //
+        public function action_editAgegroup()
+        {
+            $id = $this->request->param('id');
+            $this->template->show_logout = TRUE;
+            $this->template->title = 'Age group::Edit';
+            $agegroup = Model_Agegroup::getAgegroupById($id); 
+            $view = $this->template->content = View::factory('dashboard/agegroup/edit')
+                    ->set('agegroup',$agegroup);
+            if ($this->request->method() == Request::POST)
+            {
+                               
+                //
+                $ageArr = array(
+                            'title'=>$_POST['title'],
+                            'description'=>$_POST['description'],                            
+                            'is_public'=>$_POST['is_public']
+                            );
+                //
+                Model_Agegroup::editAgegroup($ageArr, $_POST['id']);
+                //
+ 		if($_POST['id'])
+ 		{
+                    $this->redirect('dashboard/editagegroup/'.$_POST['id']);
+ 		}
+            }
+            $this->response->body($view);
+        }
         //
         public function action_editsongs()
         {
@@ -282,7 +519,7 @@ class Controller_Dashboard extends Controller_Template_Admin {
             {
                 if (isset($_FILES['image_name']))
                 {
-                    $folderName = Model_Categories::getNameById($_POST['category_id']);
+                    $folderName = $_POST['catalog_id'];
                     $filename = $this->_save_image($_FILES['image_name'], $folderName);
                 }                
                 //
@@ -318,6 +555,19 @@ class Controller_Dashboard extends Controller_Template_Admin {
             $view->uploaded_file = isset($filename) ? $filename:$song[0]['image_name'];
             $view->error_message = isset($error_message) ? $error_message:'';
             $this->response->body($view);
+        }
+        //
+        public function action_deleteAgegroup()
+        {
+            $this->auto_render = FALSE;
+            $id = $this->request->param('id');
+            $result = Model_Agegroup::deleteAgegroup($id);
+            if($result)
+            {
+                print 'success';
+            } else {
+                print 'error';
+            }
         }
         //
         public function action_deleteSong()
@@ -366,5 +616,49 @@ class Controller_Dashboard extends Controller_Template_Admin {
             return FALSE;
         }
 	//
-
+        public function action_checkEmailExists()
+        {
+            $this->auto_render = false;
+            $email =  $_REQUEST['email'];
+            //
+            if(!Model_User::checkEmailExists($email))
+            {
+                echo 'true';
+            }
+            else
+            {
+                echo 'false';
+            }
+        }
+        //
+        public function action_checkUsernameExists()
+        {
+            $this->auto_render = false;
+            $username =  $_REQUEST['username'];
+            //
+            if(!Model_User::checkUsernameExists($username))
+            {
+                echo 'true';
+            }
+            else
+            {
+                echo 'false';
+            }
+        }
+        //
+        public function action_agegroup()
+        {
+            $this->template->show_logout = TRUE;
+            $this->template->title = 'Age group';
+            $this->template->content = View::factory('dashboard/agegroup');
+        }
+        //
+        public function action_getCatalogs()
+        {
+            $this->auto_render = false;
+            $language_id = $this->request->param('id');
+            $category_id = $this->request->param('helpid');
+            print Helper_Catalogs::selectCatalogs ($category_id,  $language_id);
+        }
+        //
 }

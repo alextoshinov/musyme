@@ -23,7 +23,7 @@ class Controller_Mainapp extends Controller_Template {
    
         if(Cookie::get('lang')){
             $this->current_lang = Cookie::get('lang');
-                $languages = array('en','bg','de', 'ru', 'es', 'fr', 'nl');
+                $languages = array('en','bg','de', 'ru', 'es', 'fr', 'nl', 'all');
                 if(!in_array($this->current_lang, $languages))
                 {
                 $this->current_lang = 'bg';

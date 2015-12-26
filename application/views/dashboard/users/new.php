@@ -12,43 +12,62 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col-lg-12">
-                <h1 class="page-header">Admins</h1>
+                <h1 class="page-header">Users</h1>
             </div>
         </div>
         <div class="row">
             <div class="col-lg-12">
                 <div class="panel panel-default">
                 	<div class="panel-heading">
-                		Add new user as Admin
+                		Add new user
                 	</div>
                 	<div class="panel-body">
-                		<form role="form" id="addNewUser" action="<?php echo URL::base()?>dashboard/newUser" method="post" enctype="multipart/form-data">
-                                    <div class="form-group col-lg-6">
-		                        <label>E-mail</label>
-                                        <input type="email" placeholder="E-mail" class="form-control" name="email" id="email">
-		                    </div>
-                                    <div class="form-group col-lg-6">
-		                        <label>Username</label>
-                                        <input type="text" placeholder="Username" class="form-control" name="username" id="username">
-		                    </div>
-		                    <div class="form-group col-lg-6">
-		                         <label>Password</label>
-                                        <input type="password" placeholder="Password" class="form-control" name="password" id="password">
-		                    </div>
-                                    
-		                    <div class="form-group col-lg-3">
-		                        <label>Is admin</label>               
-                                    <label class="radio-inline">
-                                        <input type="radio" checked="" value="1"  name="is_admin" />Yes
-                                    </label>
-                                    <label class="radio-inline">
-                                        <input type="radio" value="0"  name="is_admin" />No
-                                    </label>                                                                             
-		                    </div>
-		                    <div class="form-group col-lg-6">
-		                    	<button class="btn btn-primary pull-right" type="submit">Add user</button>
-		                    </div>
-            			</form>
+                            <?php echo Form::open(NULL, array('id' => 'create', 'autocomplete' => 'off')); ?>
+                            <fieldset>
+                                <div class="form-group">
+                                    <?php echo Form::input('email', $post['email'], array(
+                                        'id' => 'focus',
+                                        'class'=>'form-control',
+                                        'placeholder'=>'E-mail', 
+                                        'type'=>'email',
+                                        'id' => 'focus',
+                                        
+                                        )) ?>
+                                </div>
+                                <div class="form-group">
+                                   <?php echo Form::input('username', $post['username'], array(
+                                       'class'=>'form-control',
+                                       'placeholder'=>'Username', 
+                                       'type'=>'text',
+                                       'id' => 'username', 
+                                       'MAXLENGTH' => 12
+                                       )) ?>
+                                </div>
+                                <div class="checkbox">
+                                    <?php echo Form::password('password', NULL, array(
+                                        'class'=>'form-control',
+                                        'placeholder'=>'Password', 
+                                        'type'=>'password', 
+                                        'id' => 'password'
+                                        )) ?>
+                                </div>
+                                <!-- Change this to a button or input when using this as a form -->
+                                <?php echo Form::submit(NULL, 'Create', array('class'=>'btn btn-lg btn-success btn-block', 'type'=>'submit')); ?><br />
+                            </fieldset>
+                        <?php echo Form::close(); ?>
+                            <?php if ($errors) { ?>
+                            <div class="alert alert-danger alert-dismissable">
+                                                            <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
+                                    <p class="message">Some errors were encountered, please check the details you entered.</p>
+                                    <p>
+                                    <ul class="errors">
+                                    <?php foreach ($errors as $message): ?>
+                                            <li><?php echo $message ?></li>
+                                    <?php endforeach ?>
+                                    </ul>
+                                    </p>
+                            </div>        
+                            <?php } ?>
                 	</div>
                 </div>
             </div>

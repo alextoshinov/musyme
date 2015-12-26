@@ -10,7 +10,7 @@ class Helper_Languages
         { ?>
             <li>
                 <div>
-                    <a href="<?php echo URL::base()?>language/changelangto/<?php echo $lang['abbr'];?>" title="<?php echo $lang['abbr'];?>"><img src="<?php echo URL::base();?>assets/img/<?php echo $lang['icon'];?>" alt="<?php echo $lang['name'];?>"></a>
+                    <a href="<?php echo URL::base()?>language/changelangto/<?php echo $lang['abbr'];?>" title="<?php echo $lang['name'];?>"><img src="<?php echo URL::base();?>assets/img/<?php echo $lang['icon'];?>" alt="<?php echo $lang['name'];?>"></a>
                 </div>
             </li>
         <?php        

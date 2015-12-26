@@ -18,9 +18,8 @@
                         <i class="fa fa-user fa-fw"></i>  <i class="fa fa-caret-down"></i>
                     </a>
                     <ul class="dropdown-menu dropdown-user">
-                        <li><a href="#"><i class="fa fa-user fa-fw"></i> User Profile</a>
-                        </li>
-                        <li><a href="#"><i class="fa fa-gear fa-fw"></i> Settings</a>
+                        <li><?php echo HTML::anchor('profile/changepassword', '<i class="fa fa-user fa-fw"></i> Change password'); ?></li>
+                        <!--<li><a href="#"><i class="fa fa-gear fa-fw"></i> Settings</a>-->
                         </li>
                         <li class="divider"></li>
                         <li><?php echo HTML::anchor('dashboard/logout', '<i class="fa fa-sign-out fa-fw"></i> '.__('Logout')); ?>
@@ -53,13 +52,13 @@
                             <a href="<?php echo URL::base()?>catalog" ><i class="fa fa-dashboard fa-fw"></i> Catalog</a>
                         </li>
                         <li>
-                            <a href="<?php echo URL::base()?>dashboard/movies"><i class="fa fa-video-camera fa-fw"></i>Movies</a>                            
+                            <a href="<?php echo URL::base()?>dashboard/movies"><i class="fa fa-video-camera fa-fw"></i> Movies</a>                            
                         </li>
                         <li>
                             <a href="<?php echo URL::base()?>dashboard/songs"><i class="fa fa-music fa-fw"></i> Songs</a>
                         </li>
                         <li>
-                            <a href="#"><i class="fa fa-book fa-fw"></i> Books</a>
+                            <a href="<?php echo URL::base()?>dashboard/agegroup"><i class="fa fa-users fa-fw"></i> Age group</a>
                         </li>
                         <li>
                             <a href="#"><i class="fa fa-users fa-fw"></i> User managements<span class="fa arrow"></span></a>
@@ -68,7 +67,7 @@
                                     <a href="<?php echo URL::base()?>dashboard/users">View users</a>
                                 </li>
                                 <li>
-                                    <a href="<?php echo URL::base()?>dashboard/addUser">Add user</a>
+                                    <a href="<?php echo URL::base()?>dashboard/newUser">Add user</a>
                                 </li>                                
                             </ul>
                             <!-- /.nav-second-level -->
